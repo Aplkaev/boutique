@@ -19,9 +19,32 @@ class BookController extends Controller
 
     public function store(StoreBookRequest $request)
     {
-        $book = new Book($request->except('cover'));
+        $book = Book::create($request->except('cover'));
 
-        // If cover is uploaded, add media to book
+
+        // ! if cover is uploaded, add media to book
+        if ($request->hasFile('cover')) {
+            $book->cover = 'cover';
+        }
+
+        return new BookResource($book);
+    }
+
+    public function show(string $slug)
+    {
+        $book = Book::findOrFail($slug);
+
+        return new BookResource($book);
+    }
+
+
+    public function update(StoreBookRequest $request, string $slug)
+    {
+        $book = Book::where('slug', $slug)->firstOrFail();
+
+        $book->update($request->except('cover'));
+
+        // ! if cover is uploaded, add media to book
         if ($request->hasFile('cover')) {
             $book->cover = $request->file('cover');
         }
@@ -29,29 +52,12 @@ class BookController extends Controller
         return new BookResource($book);
     }
 
-    public function show($id)
+    public function destroy(string $slug)
     {
-        $book = Book::findOrFail($id);
+        $book = Book::where('slug', $slug)->firstOrFail();
 
-        return new BookResource($book);
-    }
-
-
-    public function update(StoreBookRequest $request, int $id)
-    {
-        $book = Book::find($id)->update($request->except('cover'));
-
-        // If cover is uploaded, add media to book
-        if ($request->hasFile('cover')) {
-            $book->cover = $request->file('cover');
-        }
-
-        return new BookResource($book);
-    }
-
-    public function destroy($id)
-    {
-        $book = Book::find($id)->delete();
+        // ! delete book
+        $book->delete();
 
         return response()->json(['message' => 'Book deleted'], 200);
     }

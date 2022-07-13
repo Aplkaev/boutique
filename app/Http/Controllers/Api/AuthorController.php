@@ -21,26 +21,31 @@ class AuthorController extends Controller
     {
         $author = new Author($request->validated());
 
-        return new AuthorResource($author);
-    }
-
-    public function show($id)
-    {
-        $author = Author::findOrFail($id);
+        // ! save author
+        $author->save();
 
         return new AuthorResource($author);
     }
 
-    public function update(StoreAuthorRequest $request, $id)
+    public function show($slug)
     {
-        $author = Author::find($id)->update($request->validated());
+        $author = Author::where('slug', $slug)->firstOrFail();
 
         return new AuthorResource($author);
     }
 
-    public function destroy($id)
+    public function update(StoreAuthorRequest $request, $slug)
     {
-        $author = Author::find($id)->delete();
+        $author = Author::where('slug', $slug)
+            ->firstOrFail()
+            ->update($request->validated());
+
+        return new AuthorResource($author);
+    }
+
+    public function destroy($slug)
+    {
+        $author = Author::where('slug', $slug)->firstOrFail()->delete();
 
         return response()->json(['message' => 'Author deleted'], 200);
     }

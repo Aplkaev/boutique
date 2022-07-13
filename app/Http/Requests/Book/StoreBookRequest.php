@@ -13,7 +13,7 @@ class StoreBookRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->hasUser();
+        return true;
     }
 
     /**
