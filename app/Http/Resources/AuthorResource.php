@@ -18,7 +18,6 @@ class AuthorResource extends JsonResource
             return [
                 'slug' => $this->slug,
                 'name' => $this->name,
-                'description' => $this->description ?? null,
                 'books_count' => $this->books()->count(),
                 'books' => BookResource::collection($this->books),
             ];
@@ -26,7 +25,6 @@ class AuthorResource extends JsonResource
             return [
                 'slug' => $this->slug,
                 'name' => $this->name,
-                'description' => $this->description ?? null,
                 'books_count' => $this->books()->count(),
             ];
         }
