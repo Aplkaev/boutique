@@ -56,7 +56,7 @@ class TestSeeder extends Seeder
                 // ! download image to local storage only if it's not already exists
                 try {
                     $bookModel
-                        ->addMediaFromString(file_get_contents(database_path('seeders/TestSeeder/resources/images/' . basename($book['thumbnailUrl']))))
+                        ->addMedia(database_path('seeders/TestSeeder/resources/images/' . basename($book['thumbnailUrl'])))
                         ->preservingOriginal()
                         ->toMediaCollection('cover');
 

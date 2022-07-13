@@ -14,11 +14,21 @@ class AuthorResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'slug' => $this->slug,
-            'name' => $this->name,
-            'books_count' => $this->books->count(),
-        ];
+        if ($request->routeIs('authors.show')) {
+            return [
+                'slug' => $this->slug,
+                'name' => $this->name,
+                'description' => $this->description ?? null,
+                'books_count' => $this->books()->count(),
+                'books' => BookResource::collection($this->books),
+            ];
+        } else {
+            return [
+                'slug' => $this->slug,
+                'name' => $this->name,
+                'description' => $this->description ?? null,
+                'books_count' => $this->books()->count(),
+            ];
+        }
     }
 }
