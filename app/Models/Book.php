@@ -32,7 +32,10 @@ class Book extends Model implements HasMedia
     {
         return new Attribute(
             get: fn() => $this->getFirstMediaUrl('cover', 'thumb') ?? null,
-            set: fn($value) => $this->addMedia($value)->toMediaCollection('cover'),
+            set: function($value) {
+                $this->clearMediaCollection('cover');
+                $this->addMedia($value)->toMediaCollection('cover');
+            },
         );
     }
 
