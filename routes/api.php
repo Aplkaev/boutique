@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,24 +20,32 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('/v1')->group(function () {
+    /* auth routes */
+    Route::prefix('/auth')->group(function () {
+        Route::post('/login', [Api\AuthController::class, 'login']);
+        Route::post('/register', [Api\AuthController::class, 'register']);
+        Route::middleware('auth:sanctum')->post('/logout', [Api\AuthController::class, 'logout']);
+    });
+
     /* authors routes */
     Route::prefix('/authors')->group(function () {
-        Route::get('/', 'Api\AuthorController@index');
-        Route::get('/{id}', 'Api\AuthorController@show');
+        Route::get('/', [Api\AuthorController::class, 'index']);
+        Route::get('/{slug}', [Api\AuthorController::class, 'show']);
         Route::middleware('auth:sanctum')->group(function () {
-            Route::post('/', 'Api\AuthorController@store');
-            Route::put('/{id}', 'Api\AuthorController@update');
-            Route::delete('/{id}', 'Api\AuthorController@destroy');
+            Route::post('/', [Api\AuthorController::class, 'store']);
+            Route::put('/{slug}', [Api\AuthorController::class, 'update']);
+            Route::delete('/{slug}', [Api\AuthorController::class, 'destroy']);
         });
     });
+
     /* books routes */
     Route::prefix('/books')->group(function () {
-        Route::get('/', 'Api\BookController@index');
-        Route::get('/{id}', 'Api\BookController@show');
+        Route::get('/', [Api\BookController::class, 'index']);
+        Route::get('/{slug}', [Api\BookController::class, 'show']);
         Route::middleware('auth:sanctum')->group(function () {
-            Route::post('/', 'Api\BookController@store');
-            Route::put('/{id}', 'Api\BookController@update');
-            Route::delete('/{id}', 'Api\BookController@destroy');
+            Route::post('/', [Api\BookController::class, 'store']);
+            Route::put('/{slug}', [Api\BookController::class, 'update']);
+            Route::delete('/{slug}', [Api\BookController::class, 'destroy']);
         });
     });
 
