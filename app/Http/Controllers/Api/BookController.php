@@ -32,7 +32,7 @@ class BookController extends Controller
 
     public function show(string $slug)
     {
-        $book = Book::findOrFail($slug);
+        $book = Book::where('slug', $slug)->firstOrFail();
 
         return new BookResource($book);
     }
